@@ -26,16 +26,23 @@ const linkStyle = {
 
 const IndexPage = ({data}) => {
   return (
-    <main style={pageStyles}>
-      <h1 className="text-xl" style={headingStyles}>
-        Los 15 de Olivia
-      </h1>
-     
-      <div>
-        {data.allFile.edges.map(e => (
-          <GatsbyImage image={e.node.childImageSharp.thumb}/>
+    <main >
+       
+     <section class="text-gray-600 body-font">
+       <div class="container px-5 py-24 mx-auto flex flex-wrap">
+         <div class="flex w-full mb-20 flex-wrap">
+           <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900 lg:w-1/3 lg:mb-0 mb-4">Los 15 de Olivia</h1>
+           <p class="lg:pl-6 lg:w-2/3 mx-auto leading-relaxed text-base">Club de Golf, 2023</p>
+         </div>
+         <div class="flex flex-wrap md:-m-2 -m-1">
+         {data.allFile.edges.map(e => (
+          <GatsbyImage className="w-full md:w-1/4 lg:w-1/6" image={e.node.childImageSharp.thumb}/>
         ))}
-      </div>
+         </div>
+       </div>
+     </section>
+      
+   
 
     </main>
   )
@@ -49,8 +56,9 @@ query ImagesForGallery {
         relativePath
         childImageSharp {
           thumb: gatsbyImageData(
-            width: 270
-            height: 270
+            width: 320
+            height: 320
+            layout: CONSTRAINED
             placeholder: DOMINANT_COLOR
             transformOptions: {cropFocus: NORTH}
           )
