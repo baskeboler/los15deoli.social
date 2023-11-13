@@ -1,63 +1,66 @@
-import * as React from "react"
-import { graphql } from "gatsby"
-import { GatsbyImage } from "gatsby-plugin-image"
+import React, { useState } from "react";
+import { graphql } from "gatsby";
+import { GatsbyImage } from "gatsby-plugin-image";
+import Pagination  from "../components/Pagination";
 
-const Header = () => {
-  return ( 
-  <div>
-    <h1 class="sm:text-5xl text-3xl mb-4 font-medium bg-clip-text text-transparent bg-gradient-to-r from-emerald-200 to-blue-500">
-      Los 15 de Olivia
-    </h1>
-  </div> );
-}
- 
+const PAGE_SIZE = 24;
 
+const IndexPage = ({ data }) => {
+  const [ page, setPage] = useState(0);
+  let images = data.allFile.edges.map((e) => e.node.childImageSharp.thumb);
 
+  const renderImages = () => {
+    let pageImages = images.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    return pageImages.map((i, index) => (
+      <GatsbyImage id={`image${index}`} className="w-full md:w-1/4 lg:w-1/6" image={i} />
+    ));
+  };
 
-
-const IndexPage = ({data}) => {
   return (
-    <main >
-     <section class="text-gray-600 body-font">
-       <div class="container px-5 py-24 mx-auto flex flex-wrap">
-         <div class="flex w-full mb-20 flex-wrap">
-    <Header></Header>    
-           {/* <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900 lg:w-1/3 lg:mb-0 mb-4">Los 15 de Olivia</h1> */}
-           <p class="lg:pl-6 lg:w-2/3 mx-auto leading-relaxed text-base">Club de Golf, 2023</p>
-         </div>
-         <div class="flex flex-wrap md:-m-2 -m-1 rounded">
-         {data.allFile.edges.map(e => (
-          <GatsbyImage className="w-full md:w-1/4 lg:w-1/6" image={e.node.childImageSharp.thumb}/>
-        ))}
-         </div>
-       </div>
-     </section>
-      
-   
+    <main>
+      <section className="text-gray-600 body-font">
+        <div className="container px-5 py-24 mx-auto flex flex-wrap">
+       
+          <div className="flex w-full mb-20 flex-wrap">
+            <h1 className="lg:w-2/3 sm:text-5xl text-3xl mb-4 font-medium bg-clip-text text-transparent bg-gradient-to-br from-pink-500 text to-pink-200 blue-300">
+        Los 15 de Olivia
+      </h1>
+            <p className="lg:pl-6 lg:w-1/3 mx-auto leading-relaxed flex flex-row text-base align-text-bottom">
+              Club de Golf, 14 de Octubre 2023
+            </p>
+          </div>
+          <div className="flex flex-wrap md:-m-2 -m-1">
+            {renderImages()}
+            <span className="w-full border-b mt-3 border-gray-300"></span>
+          <Pagination currentPage={page} pageSize={PAGE_SIZE} setPage={setPage} elements={images} />
+            </div>
+        </div>
+      </section>
 
+      {/* <Footer></Footer> */}
     </main>
-  )
-}
+  );
+};
 
 export const pageQuery = graphql`
-query ImagesForGallery {
-  allFile(filter: {relativePath: {regex: "/oli/"}}) {
-    edges {
-      node {
-        childImageSharp {
-          thumb: gatsbyImageData(
-            width: 320
-            height: 320
-            placeholder: BLURRED
-            transformOptions: {cropFocus: NORTH}
-          )
+  query ImagesForGallery {
+    allFile(filter: { relativePath: { regex: "/oli/" } }) {
+      edges {
+        node {
+          childImageSharp {
+            thumb: gatsbyImageData(
+              width: 320
+              height: 320
+              placeholder: DOMINANT_COLOR
+              transformOptions: { cropFocus: NORTH }
+            )
+          }
         }
       }
     }
   }
-}
-`
+`;
 
-export default IndexPage
+export default IndexPage;
 
-export const Head = () => <title>Los 15 de Olivia</title>
+export const Head = () => <title>Los 15 de Olivia</title>;
